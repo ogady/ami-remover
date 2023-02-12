@@ -3,7 +3,7 @@
 ## install
 
 ```
-go install github.com/ogady/ami-remover
+go install github.com/ogady/ami-remover@latest
 ```
 
 ## usage
