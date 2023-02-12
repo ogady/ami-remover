@@ -1,4 +1,4 @@
-module github.com/ogady/ami_remover
+module github.com/ogady/ami-remover
 
 go 1.19
 
