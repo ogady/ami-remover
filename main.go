@@ -18,11 +18,19 @@ func main() {
 	specified_date := flag.String("date", "", "YYYY-MM-DD. Deletes AMIs older than the specified date")
 	isDryRun := flag.Bool("dry_run", false, "")
 
+	// args, flagの前処理
 	flag.Parse()
 	args := flag.Args()
-
+	if len(args) == 0 {
+		log.Fatalf("Please specify AMI name.")
+	}
+	sd, err := time.Parse("20060102", *specified_date)
+	if err != nil {
+		log.Fatalf("failed to parse specified date. Please specify in this format 'YYYY-MM-DD'. err: %v", err)
+	}
 	log.Printf("dry run mode: %v", *isDryRun)
 
+	// AWSへの処理
 	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("ap-northeast-1"))
 	if err != nil {
 		log.Fatalf("failed to load configuration, %v", err)
@@ -41,11 +49,6 @@ func main() {
 	result, err := client.DescribeImages(ctx, &input)
 	if err != nil {
 		log.Fatalf("Got an error retrieving information about your Amazon EC2 instances. err: %v", err)
-	}
-
-	sd, err := time.Parse("20060102", *specified_date)
-	if err != nil {
-		log.Fatalf("failed to parse specified date. Please specify in this format 'YYYY-MM-DD'. err: %v", err)
 	}
 
 	for _, r := range result.Images {
